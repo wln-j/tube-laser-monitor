@@ -1,0 +1,163 @@
+:root {
+  --clr-dark-a0: #000000;
+  --clr-light-a0: #ffffff;
+
+  /** Theme primary colors */
+  --clr-primary-a0: #0d3c24;
+  --clr-primary-a10: #284f39;
+  --clr-primary-a20: #41644f;
+  --clr-primary-a30: #5b7865;
+  --clr-primary-a40: #748e7d;
+  --clr-primary-a50: #8fa396;
+
+  /** Theme surface colors */
+  --clr-surface-a0: #121212;
+  --clr-surface-a10: #282828;
+  --clr-surface-a20: #3f3f3f;
+  --clr-surface-a30: #575757;
+  --clr-surface-a40: #717171;
+  --clr-surface-a50: #8b8b8b;
+
+  /** Theme tonal surface colors */
+  --clr-surface-tonal-a0: #131714;
+  --clr-surface-tonal-a10: #282c29;
+  --clr-surface-tonal-a20: #3f4340;
+  --clr-surface-tonal-a30: #585b58;
+  --clr-surface-tonal-a40: #717472;
+  --clr-surface-tonal-a50: #8c8e8c;
+
+  /** Success colors */
+  --clr-success-a0: #22946e;
+  --clr-success-a10: #47d5a6;
+  --clr-success-a20: #9ae8ce;
+
+  /** Warning colors */
+  --clr-warning-a0: #a87a2a;
+  --clr-warning-a10: #d7ac61;
+  --clr-warning-a20: #ecd7b2;
+
+  /** Danger colors */
+  --clr-danger-a0: #9c2121;
+  --clr-danger-a10: #d94a4a;
+  --clr-danger-a20: #eb9e9e;
+
+  /** Info colors */
+  --clr-info-a0: #21498a;
+  --clr-info-a10: #4077d1;
+  --clr-info-a20: #92b2e5;
+}
+
+body {
+  background-color: var(--clr-surface-a0);
+  color: var(--clr-light-a0);
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  font-size: 0.875rem;
+  margin: 0;
+  padding: 0;
+}
+
+#main-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+#status-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 50vh;
+}
+
+#status-color {
+  height: 25vh;
+}
+
+#status-color.false {
+  stroke: var(--clr-surface-a10);
+}
+
+#status-color.true {
+  stroke: var(--clr-primary-a30);
+}
+
+#status-color.error {
+  stroke: var(--clr-danger-a0);
+}
+
+#time-container {
+  flex: 1;
+  padding: 0 1.25rem;
+}
+
+#timeline-container {
+  position: relative;
+  height: 3rem;
+  margin-bottom: 1.5rem;
+}
+
+#timeline {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  z-index: 2;
+}
+
+.status-change {
+  position: absolute;
+  height: 50%;
+  background-color: var(--clr-primary-a30);
+  border-radius: 0.375rem;
+}
+
+#hour-marks {
+  position: relative;
+  height: 100%;
+  z-index: 1;
+}
+
+.marker {
+  position: absolute;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+}
+
+.marker-line {
+  width: 1px;
+  height: 100%;
+  border-left: 1px dashed var(--clr-surface-a30);
+  opacity: 0.6;
+}
+
+.marker-hour {
+  margin-left: 0.375rem;
+  font-size: 0.75rem;
+  color: var(--clr-surface-a30);
+  line-height: 1;
+}
+
+.total-container {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.bullet {
+  background-color: var(--clr-primary-a30);
+  width: 0.75rem;
+  height: 0.75rem;
+  border-radius: 50%;
+}
+
+.time-total {
+  font-size: 0.875rem;
+  font-weight: 500;
+}
+
+#timestamp {
+  margin: 1.5rem 0;
+  text-align: center;
+  color: var(--clr-surface-a40);
+  font-size: 0.8125rem;
+}

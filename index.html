@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="apple-mobile-web-app-title" content="onlyWebPro">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="description" content="Real-time tube laser machine monitoring">
+  <title>Tube Laser Monitor</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="main.js" type="module"></script>
+</head>
+<body>
+  <div id="main-container">
+    <div id="status-container">
+      <svg id="status-color" viewBox="0 0 185 215" xmlns="http://www.w3.org/2000/svg" aria-label="Machine status indicator">
+        <g transform="translate(0.98400979,-1.65889)">
+          <path style="fill:none;stroke-width:8;stroke-linecap:round" d="M 148.35607,57.799577 A 87.515556,87.515541 0 0 1 173.65604,154.5431 87.515556,87.515541 0 0 1 91.715573,211.85941 87.515556,87.515541 0 0 1 9.5144976,154.91749 87.515556,87.515541 0 0 1 34.37288,58.05956 M 91.225271,6.45789 v 87.280091"/>
+        </g>
+      </svg>
+    </div>
+    
+    <div id="time-container">
+      <div id="timeline-container">
+        <div id="hour-marks" aria-hidden="true">
+          <div class="marker" style="left: 0%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">12</div>
+          </div>
+          <div class="marker" style="left: 12.5%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">3</div>
+          </div>
+          <div class="marker" style="left: 25%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">6</div>
+          </div>
+          <div class="marker" style="left: 37.5%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">9</div>
+          </div>
+          <div class="marker" style="left: 50%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">12</div>
+          </div>
+          <div class="marker" style="left: 62.5%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">3</div>
+          </div>
+          <div class="marker" style="left: 75%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">6</div>
+          </div>
+          <div class="marker" style="left: 87.5%;">
+            <div class="marker-line"></div>
+            <div class="marker-hour">9</div>
+          </div>
+          <div class="marker" style="left: 100%;">
+            <div class="marker-line"></div>
+          </div>
+        </div>
+        <div id="timeline" role="img" aria-label="Machine running timeline"></div>
+      </div>
+      
+      <div class="total-container">
+          <div class="bullet running-status" aria-hidden="true"></div>
+          <span class="time-total" id="running-time">0m</span>
+      </div>
+    </div>
+    
+    <time id="timestamp" datetime="">--</time>
+  </div>
+</body>
+</html>
