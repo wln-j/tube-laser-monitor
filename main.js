@@ -8,10 +8,10 @@ const MS_PER_MINUTE = 60000;
 
 let intervalId = null;
 let realtimeChannel = null;
+let previousDataLength = 0;
 
 window.onload = () => {
     fetchData();
-
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
             fetchData();
@@ -46,13 +46,17 @@ async function fetchData() {
             (payload) => {
                 if (payload.new.time >= startOfDay && payload.new.time < endOfDay) {
                     data.push(payload.new)
+                    previousDataLength = data.length;
                     processEvents(data, new Date(startOfDay));
                 }
             }
         )
         .subscribe()
 
-    processEvents(data, new Date(startOfDay));
+    if (data.length !== previousDataLength) {
+        previousDataLength = data.length;
+        processEvents(data, new Date(startOfDay));
+    }
 }
 
 function processEvents(data, startOfDay) {
