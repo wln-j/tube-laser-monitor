@@ -7,16 +7,31 @@ const MS_PER_HOUR = 3600000;
 const MS_PER_MINUTE = 60000;
 
 let intervalId = null;
+let realtimeChannel = null;
 
 window.onload = () => {
     fetchData();
+
+    document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) {
+            fetchData();
+        }
+    });
 }
 
 async function fetchData() {
     const urlParams = new URLSearchParams(window.location.search);
-    const dateParam = urlParams.get('date') || new Date().toISOString().split('T')[0];
+    const getLocalDate = () => {
+        const now = new Date();
+        return now.toLocaleDateString('en-CA');
+    };
+    const dateParam = urlParams.get('date') || getLocalDate();
     const startOfDay = `${dateParam}T00:00:00`;
     const endOfDay = `${dateParam}T23:59:59.999`;
+
+    if (realtimeChannel) {
+        await supabase.removeChannel(realtimeChannel);
+    }
 
     const { data } = await supabase
         .from('states')
@@ -24,12 +39,11 @@ async function fetchData() {
         .gte('time', startOfDay)
         .lt('time', endOfDay)
 
-    supabase.channel('custom-insert-channel')
+    realtimeChannel = supabase.channel('custom-insert-channel')
         .on(
             'postgres_changes',
             { event: 'INSERT', schema: 'public', table: 'states' },
             (payload) => {
-                console.log('Change received!', payload)
                 if (payload.new.time >= startOfDay && payload.new.time < endOfDay) {
                     data.push(payload.new)
                     processEvents(data, new Date(startOfDay));
