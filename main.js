@@ -14,7 +14,6 @@ window.onload = () => {
     fetchData();
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
-            console.log('Page became visible, refreshing...');
             fetchData();
         }
     });
@@ -45,7 +44,6 @@ async function fetchData() {
             'postgres_changes',
             { event: 'INSERT', schema: 'public', table: 'states' },
             (payload) => {
-                console.log('Change received!', payload)
                 if (payload.new.time >= startOfDay && payload.new.time < endOfDay) {
                     data.push(payload.new)
                     previousDataLength = data.length;
@@ -59,12 +57,6 @@ async function fetchData() {
         previousDataLength = data.length;
         processEvents(data, new Date(startOfDay));
     }
-    // const { data: dates } = await supabase
-    //     .from('states')
-    //     .select('time')
-
-    // const uniqueDates = [...new Set(dates.map(row => row.time.split('T')[0]))];
-    // console.log(uniqueDates);
 }
 
 function processEvents(data, startOfDay) {
