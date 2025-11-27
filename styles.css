@@ -77,13 +77,10 @@ body {
 
 #status-color {
   height: 25vh;
-}
-
-#status-color.false {
   stroke: var(--clr-surface-a10);
 }
 
-#status-color.true {
+#status-color.running {
   stroke: var(--clr-primary-a30);
 }
 

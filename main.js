@@ -108,7 +108,7 @@ function initPage(data, startOfDay) {
     timeline.innerHTML = "";
     timeline.appendChild(df);
 
-    document.getElementById("status-color").setAttribute("class", `status-color ${data[data.length - 1].state}`);
+    document.getElementById("status-color").classList.toggle("running", data[data.length - 1].state);
     document.getElementById("running-time").innerHTML = formatTime(runningTime);
     updateTimestamp();
 }
@@ -140,7 +140,7 @@ function updatePage(data, startOfDay) {
         }
     }
 
-    document.getElementById("status-color").setAttribute("class", `status-color ${data[data.length - 1].state}`);
+    document.getElementById("status-color").classList.toggle("running", data[data.length - 1].state);
     document.getElementById("running-time").innerHTML = formatTime(runningTime);
     updateTimestamp();
 }
