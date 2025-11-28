@@ -26,8 +26,8 @@ async function fetchData() {
         return now.toLocaleDateString('en-CA');
     };
     const dateParam = urlParams.get('date') || getLocalDate();
-    const startOfDay = `${dateParam}T00:00:00`;
-    const endOfDay = `${dateParam}T23:59:59.999`;
+    const startOfDay = new Date(`${dateParam}T00:00:00`);
+    const endOfDay = new Date(`${dateParam}T23:59:59.999`);
 
     if (realtimeChannel) {
         await supabase.removeChannel(realtimeChannel);
@@ -36,8 +36,8 @@ async function fetchData() {
     const { data } = await supabase
         .from('states')
         .select('state, time')
-        .gte('time', new Date(startOfDay).toISOString())
-        .lt('time', new Date(endOfDay).toISOString())
+        .gte('time', startOfDay.toISOString())
+        .lt('time', endOfDay.toISOString())
 
     realtimeChannel = supabase.channel('custom-insert-channel')
         .on(
@@ -47,7 +47,7 @@ async function fetchData() {
                 if (payload.new.time >= startOfDay && payload.new.time < endOfDay) {
                     data.push(payload.new)
                     previousDataLength = data.length;
-                    processEvents(data, new Date(startOfDay));
+                    renderPage(data, startOfDay);
                 }
             }
         )
@@ -55,102 +55,98 @@ async function fetchData() {
 
     if (data.length !== previousDataLength) {
         previousDataLength = data.length;
-        processEvents(data, new Date(startOfDay));
+        renderPage(data, startOfDay);
     }
 }
 
-function processEvents(data, startOfDay) {
-    if (data.length === 0) return;
+function renderPage(events, startOfDay) {
+    if (events.length === 0) return;
 
     if (intervalId) {
         clearInterval(intervalId);
         intervalId = null;
     }
 
-    initPage(data, startOfDay);
-
-    if (data[data.length - 1].state) {
-        intervalId = setInterval(() => {
-            updatePage(data, startOfDay);
-        }, 1000);
-    }
-}
-
-function initPage(data, startOfDay) {
     const timeline = document.getElementById("timeline");
     const df = document.createDocumentFragment();
+    const lastEvent = events[events.length - 1]
+    const running = lastEvent.state;
 
-    let runningTime = 0;
+    let completedTime = 0;
+    let currentDuration = 0;
 
-    if (!data[0].state) {
-        const eventEnd = new Date(data[0].time)
-        const duration = eventEnd - startOfDay;
-
-        df.appendChild(createStatusBar(duration, 0))
-        runningTime += duration;
+    if (!events[0].state) {
+        const duration = new Date(events[0].time) - startOfDay;
+        df.appendChild(createEventElement(duration, 0));
+        completedTime += duration;
     }
 
-    for (let i = 0; i <= data.length - 1; i++) {
-        const event = data[i];
-
+    for (let i = 0; i <= events.length - 1; i++) {
+        const event = events[i];
         if (event.state) {
-            const nextEvent = data[i + 1]
+            const nextEvent = events[i + 1]
             const eventStart = new Date(event.time);
             const eventEnd = nextEvent ? new Date(nextEvent.time) : new Date();
             const duration = eventEnd - eventStart;
             const offset = eventStart - startOfDay;
 
-            df.appendChild(createStatusBar(duration, offset))
-            runningTime += duration;
+            df.appendChild(createEventElement(duration, offset))
+            if (nextEvent) {
+                completedTime += duration;
+            } else {
+                currentDuration = duration;
+            }
         }
     }
 
     timeline.innerHTML = "";
     timeline.appendChild(df);
-
-    document.getElementById("status-color").classList.toggle("running", data[data.length - 1].state);
-    document.getElementById("running-time").innerHTML = formatTime(runningTime);
+    document.getElementById("status-color").classList.toggle("running", running);
+    updateRunningTime(completedTime + currentDuration);
     updateTimestamp();
+
+    if (running) {
+        intervalId = setInterval(() => {
+            updatePage(events[events.length - 1].time, completedTime, timeline);
+        }, 1000);
+    }
 }
 
-function updatePage(data, startOfDay) {
-    const timeline = document.getElementById("timeline");
-
-    let runningTime = 0;
-
-    if (!data[0].state) {
-        const eventEnd = new Date(data[0].time)
-        const duration = eventEnd - startOfDay;
-        runningTime += duration;
-    }
-
-    for (let i = 0; i <= data.length - 1; i++) {
-        const event = data[i];
-
-        if (event.state) {
-            const nextEvent = data[i + 1]
-            const eventStart = new Date(event.time);
-            const eventEnd = nextEvent ? new Date(nextEvent.time) : new Date();
-            const duration = eventEnd - eventStart;
-            runningTime += duration;
-
-            if (!nextEvent) {
-                timeline.lastElementChild.style.width = `${(duration / MS_PER_DAY) * 100}%`;
-            }
-        }
-    }
-
-    document.getElementById("status-color").classList.toggle("running", data[data.length - 1].state);
-    document.getElementById("running-time").innerHTML = formatTime(runningTime);
-    updateTimestamp();
-}
-
-function createStatusBar(duration, offset) {
+function createEventElement(duration, offset) {
     const newStatus = document.createElement("div");
     newStatus.className = "status-change running-status";
     newStatus.style.width = `${(duration / MS_PER_DAY) * 100}%`;
     newStatus.style.left = `${(offset / MS_PER_DAY) * 100}%`;
-    return newStatus;
+    return newStatus
+}
+
+function updatePage(runningEvent, runningTime, timeline) {
+    const duration = new Date() - new Date(runningEvent);
+    timeline.lastElementChild.style.width = `${(duration / MS_PER_DAY) * 100}%`;
+
+    updateRunningTime(runningTime + duration);
+    updateTimestamp();
+}
+
+function updateRunningTime(milliseconds) {
+    if (milliseconds < MS_PER_MINUTE) {
+        return "0m";
+    }
+
+    const hours = Math.floor(milliseconds / MS_PER_HOUR);
+    const minutes = Math.floor((milliseconds % MS_PER_HOUR) / MS_PER_MINUTE);
+    
+    const parts = [];
+  
+    if (hours > 0) {
+        parts.push(`${hours}h`);
+    }
+  
+    if (minutes > 0) {
+        parts.push(`${minutes}m`);
+    }
+  
+    document.getElementById("running-time").textContent = parts.join(" ");
 }
 
 function updateTimestamp() {
@@ -162,25 +158,4 @@ function updateTimestamp() {
     });
 
   document.getElementById("timestamp").innerText = "Updated " + formattedDate;
-}
-
-function formatTime(milliseconds) {
-    if (milliseconds < MS_PER_MINUTE) {
-        return "<span class='time-total'>0</span><span>m</span>";
-    }
-
-    const hours = Math.floor(milliseconds / MS_PER_HOUR);
-    const minutes = Math.floor((milliseconds % MS_PER_HOUR) / MS_PER_MINUTE);
-    
-    const parts = [];
-  
-    if (hours > 0) {
-        parts.push(`<span class='time-total'>${hours}</span><span>h</span>`);
-    }
-  
-    if (minutes > 0) {
-        parts.push(`<span class='time-total'>${minutes}</span><span>m</span>`);
-    }
-  
-    return parts.join(" ");
 }
