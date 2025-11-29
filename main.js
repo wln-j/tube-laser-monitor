@@ -44,7 +44,8 @@ async function fetchData() {
             'postgres_changes',
             { event: 'INSERT', schema: 'public', table: 'states' },
             (payload) => {
-                if (payload.new.time >= startOfDay && payload.new.time < endOfDay) {
+                const payloadTime = new Date(payload.new.time);
+                if (payloadTime >= startOfDay && payloadTime < endOfDay) {
                     data.push(payload.new)
                     previousDataLength = data.length;
                     renderPage(data, startOfDay);
@@ -129,23 +130,18 @@ function updatePage(runningEvent, runningTime, timeline) {
 }
 
 function updateRunningTime(milliseconds) {
-    if (milliseconds < MS_PER_MINUTE) {
-        return "0m";
-    }
-
     const hours = Math.floor(milliseconds / MS_PER_HOUR);
     const minutes = Math.floor((milliseconds % MS_PER_HOUR) / MS_PER_MINUTE);
     
+    if (milliseconds < MS_PER_MINUTE) {
+        document.getElementById("running-time").textContent = "0m";
+        return;
+    }
+    
     const parts = [];
-  
-    if (hours > 0) {
-        parts.push(`${hours}h`);
-    }
-  
-    if (minutes > 0) {
-        parts.push(`${minutes}m`);
-    }
-  
+    if (hours > 0) parts.push(`${hours}h`);
+    parts.push(`${minutes}m`);
+    
     document.getElementById("running-time").textContent = parts.join(" ");
 }
 
