@@ -107,8 +107,9 @@ function renderPage(events, startOfDay) {
 
     if (running) {
         const lastElement = timeline.lastElementChild;
+        const runningEventTime = new Date(events[events.length - 1].time)
         intervalId = setInterval(() => {
-            updatePage(new Date(events[events.length - 1].time), completedTime, lastElement);
+            updatePage(runningEventTime, completedTime, lastElement);
         }, 1000);
     }
 }
