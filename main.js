@@ -70,8 +70,7 @@ function renderPage(events, startOfDay) {
 
     const timeline = document.getElementById("timeline");
     const df = document.createDocumentFragment();
-    const lastEvent = events[events.length - 1]
-    const running = lastEvent.state;
+    const running = events[events.length - 1].state;
 
     let completedTime = 0;
     let currentDuration = 0;
@@ -107,8 +106,9 @@ function renderPage(events, startOfDay) {
     updateTimestamp();
 
     if (running) {
+        const lastElement = timeline.lastElementChild;
         intervalId = setInterval(() => {
-            updatePage(events[events.length - 1].time, completedTime, timeline);
+            updatePage(new Date(events[events.length - 1].time), completedTime, lastElement);
         }, 1000);
     }
 }
@@ -121,11 +121,11 @@ function createEventElement(duration, offset) {
     return newStatus
 }
 
-function updatePage(runningEvent, runningTime, timeline) {
-    const duration = new Date() - new Date(runningEvent);
-    timeline.lastElementChild.style.width = `${(duration / MS_PER_DAY) * 100}%`;
+function updatePage(runningEvent, completedTime, lastElement) {
+    const duration = new Date() - runningEvent;
+    lastElement.style.width = `${(duration / MS_PER_DAY) * 100}%`;
 
-    updateRunningTime(runningTime + duration);
+    updateRunningTime(completedTime + duration);
     updateTimestamp();
 }
 
