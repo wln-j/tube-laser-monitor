@@ -131,15 +131,15 @@ function updatePage( completedTime, runningEventTime, lastElement) {
 }
 
 function updateRunningTime(milliseconds) {
-    const hours = Math.floor(milliseconds / MS_PER_HOUR);
-    const minutes = Math.floor((milliseconds % MS_PER_HOUR) / MS_PER_MINUTE);
-    
     if (milliseconds < MS_PER_MINUTE) {
         document.getElementById("running-time").textContent = "0m";
         return;
     }
-    
+
+    const hours = Math.floor(milliseconds / MS_PER_HOUR);
+    const minutes = Math.floor((milliseconds % MS_PER_HOUR) / MS_PER_MINUTE);
     const parts = [];
+
     if (hours > 0) parts.push(`${hours}h`);
     parts.push(`${minutes}m`);
     
