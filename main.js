@@ -106,8 +106,8 @@ function renderPage(events, startOfDay) {
     updateTimestamp();
 
     if (running) {
-        const lastElement = timeline.lastElementChild;
         const runningEventTime = new Date(events[events.length - 1].time)
+        const lastElement = timeline.lastElementChild;
         intervalId = setInterval(() => {
             updatePage(runningEventTime, completedTime, lastElement);
         }, 1000);
