@@ -121,8 +121,8 @@ function createEventElement(duration, offset) {
     return newStatus
 }
 
-function updatePage(runningEvent, completedTime, lastElement) {
-    const duration = new Date() - runningEvent;
+function updatePage(runningEventTime, completedTime, lastElement) {
+    const duration = new Date() - runningEventTime;
     lastElement.style.width = `${(duration / MS_PER_DAY) * 100}%`;
 
     updateRunningTime(completedTime + duration);
