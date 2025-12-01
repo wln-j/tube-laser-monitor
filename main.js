@@ -14,6 +14,7 @@ window.onload = () => {
     fetchData();
     document.addEventListener('visibilitychange', () => {
         if (!document.hidden) {
+
             fetchData();
         }
     });
@@ -34,7 +35,7 @@ async function fetchData() {
     }
 
     const { data } = await supabase
-        .from('states')
+        .from('events')
         .select('state, time')
         .gte('time', startOfDay.toISOString())
         .lt('time', endOfDay.toISOString())
@@ -42,7 +43,7 @@ async function fetchData() {
     realtimeChannel = supabase.channel('custom-insert-channel')
         .on(
             'postgres_changes',
-            { event: 'INSERT', schema: 'public', table: 'states' },
+            { event: 'INSERT', schema: 'public', table: 'events' },
             (payload) => {
                 const payloadTime = new Date(payload.new.time);
                 if (payloadTime >= startOfDay && payloadTime < endOfDay) {
