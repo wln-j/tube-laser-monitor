@@ -109,7 +109,7 @@ function renderPage(events, startOfDay) {
         const runningEventTime = new Date(events[events.length - 1].time)
         const lastElement = timeline.lastElementChild;
         intervalId = setInterval(() => {
-            updatePage(runningEventTime, completedTime, lastElement);
+            updatePage(completedTime, runningEventTime, lastElement);
         }, 1000);
     }
 }
@@ -122,7 +122,7 @@ function createEventElement(duration, offset) {
     return newStatus
 }
 
-function updatePage(runningEventTime, completedTime, lastElement) {
+function updatePage( completedTime, runningEventTime,lastElement) {
     const duration = new Date() - runningEventTime;
     lastElement.style.width = `${(duration / MS_PER_DAY) * 100}%`;
 
