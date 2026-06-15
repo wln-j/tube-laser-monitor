@@ -8,64 +8,56 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="description" content="Real-time tube laser machine monitoring">
   <title>Tube Laser Monitor</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css">
   <script src="main.js" type="module"></script>
 </head>
 <body>
   <div id="main-container">
-    <div id="status-container">
-    <svg id="status-color" width="256px" height="256px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="Machine status indicator">
-      <g><path style="fill:none;stroke-width:1;stroke-linecap:round" d="M5 4.98951C5 4.01835 5 3.53277 5.20249 3.2651C5.37889 3.03191 5.64852 2.88761 5.9404 2.87018C6.27544 2.85017 6.67946 3.11953 7.48752 3.65823L18.0031 10.6686C18.6708 11.1137 19.0046 11.3363 19.1209 11.6168C19.2227 11.8621 19.2227 12.1377 19.1209 12.383C19.0046 12.6635 18.6708 12.886 18.0031 13.3312L7.48752 20.3415C6.67946 20.8802 6.27544 21.1496 5.9404 21.1296C5.64852 21.1122 5.37889 20.9679 5.20249 20.7347C5 20.467 5 19.9814 5 19.0103V4.98951Z"></path></g>
-    </svg>
+
+    <div id="date-nav">
+      <button id="prev-day" class="nav-btn" aria-label="Previous day">&#8249;</button>
+      <label id="date-label">
+        <span id="date-text">Today</span>
+        <input type="date" id="date-input" aria-label="Pick a date">
+      </label>
+      <button id="next-day" class="nav-btn" aria-label="Next day" disabled>&#8250;</button>
     </div>
+
+    <div id="status-container">
+      <svg id="status-color" width="256px" height="256px" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" aria-label="Machine status indicator">
+        <g><path style="stroke-width:1;stroke-linecap:round;stroke-linejoin:round" d="M5 4.98951C5 4.01835 5 3.53277 5.20249 3.2651C5.37889 3.03191 5.64852 2.88761 5.9404 2.87018C6.27544 2.85017 6.67946 3.11953 7.48752 3.65823L18.0031 10.6686C18.6708 11.1137 19.0046 11.3363 19.1209 11.6168C19.2227 11.8621 19.2227 12.1377 19.1209 12.383C19.0046 12.6635 18.6708 12.886 18.0031 13.3312L7.48752 20.3415C6.67946 20.8802 6.27544 21.1496 5.9404 21.1296C5.64852 21.1122 5.37889 20.9679 5.20249 20.7347C5 20.467 5 19.9814 5 19.0103V4.98951Z"></path></g>
+      </svg>
+    </div>
+
     <div id="time-container">
       <div id="timeline-container">
         <div id="hour-marks" aria-hidden="true">
-          <div class="marker" style="left: 0%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">12</div>
-          </div>
-          <div class="marker" style="left: 12.5%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">3</div>
-          </div>
-          <div class="marker" style="left: 25%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">6</div>
-          </div>
-          <div class="marker" style="left: 37.5%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">9</div>
-          </div>
-          <div class="marker" style="left: 50%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">12</div>
-          </div>
-          <div class="marker" style="left: 62.5%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">3</div>
-          </div>
-          <div class="marker" style="left: 75%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">6</div>
-          </div>
-          <div class="marker" style="left: 87.5%;">
-            <div class="marker-line"></div>
-            <div class="marker-hour">9</div>
-          </div>
-          <div class="marker" style="left: 100%;">
-            <div class="marker-line"></div>
-          </div>
+          <div class="marker" style="left: 0%;"><div class="marker-line"></div><div class="marker-hour">12a</div></div>
+          <div class="marker" style="left: 12.5%;"><div class="marker-line"></div><div class="marker-hour">3a</div></div>
+          <div class="marker" style="left: 25%;"><div class="marker-line"></div><div class="marker-hour">6a</div></div>
+          <div class="marker" style="left: 37.5%;"><div class="marker-line"></div><div class="marker-hour">9a</div></div>
+          <div class="marker" style="left: 50%;"><div class="marker-line"></div><div class="marker-hour">12p</div></div>
+          <div class="marker" style="left: 62.5%;"><div class="marker-line"></div><div class="marker-hour">3p</div></div>
+          <div class="marker" style="left: 75%;"><div class="marker-line"></div><div class="marker-hour">6p</div></div>
+          <div class="marker" style="left: 87.5%;"><div class="marker-line"></div><div class="marker-hour">9p</div></div>
+          <div class="marker" style="left: 100%;"><div class="marker-line"></div><div class="marker-hour">12a</div></div>
         </div>
         <div id="timeline" role="img" aria-label="Machine running timeline"></div>
+        <div id="now-marker" class="hidden" aria-hidden="true"></div>
+        <div id="scrubber" class="hidden" aria-hidden="true"><span id="scrub-time"></span></div>
+        <div id="bar-pop" aria-hidden="true"></div>
       </div>
-      
+
       <div class="total-container">
           <div class="bullet running-status" aria-hidden="true"></div>
           <span class="time-total" id="running-time">0m</span>
+          <span class="current-run hidden" id="current-run">current run <span id="current-run-val">0m</span></span>
       </div>
     </div>
-    
+
     <time id="timestamp" datetime="">--</time>
   </div>
 </body>
